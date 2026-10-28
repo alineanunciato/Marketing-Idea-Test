@@ -39,3 +39,4 @@ as $$
 $$;
 
 revoke execute on function upvote(uuid) from public, anon, authenticated;
+grant execute on function upvote(uuid) to service_role;
