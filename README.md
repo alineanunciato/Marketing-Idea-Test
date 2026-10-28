@@ -33,6 +33,20 @@ All database access happens on the server with the Supabase service role key. Ro
    npm run dev
    ```
 
+## Deploy to Cloudflare Workers
+
+The app runs on Cloudflare Workers through the [OpenNext Cloudflare adapter](https://opennext.js.org/cloudflare). The config is in `wrangler.jsonc`, and the Worker is named `name-my-thing`.
+
+1. In GitHub, go to **Settings → Secrets and variables → Actions** and add these repository secrets:
+   - `CLOUDFLARE_API_TOKEN`: a token made from the "Edit Cloudflare Workers" template
+   - `CLOUDFLARE_ACCOUNT_ID`: shown on your account's Workers & Pages overview
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`
+2. Deploy: go to **Actions → Deploy to Cloudflare → Run workflow**. The workflow also runs on every push to `main`. It builds the app, deploys it, and copies the five app keys into the Worker as secrets.
+
+The app is then live at `https://name-my-thing.<your-subdomain>.workers.dev`. To use your own domain, go to the Worker's **Settings → Domains & Routes** in Cloudflare.
+
+To deploy from your own machine instead, run `npx wrangler login`, then `npm run deploy`. Set the app keys once with `npx wrangler secret put <NAME>`. To test the production build locally in the Workers runtime, copy `.dev.vars.example` to `.dev.vars`, fill it in, and run `npm run preview`.
+
 ## Notes
 
 - The Claude call turns on server-side refusal fallbacks (`fallbacks: "default"`), so a safety-classifier decline is retried on a fallback model instead of returning nothing.
