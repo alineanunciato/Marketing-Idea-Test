@@ -10,7 +10,7 @@ Built with Next.js (App Router) and Supabase.
 - **`POST /api/vote`** increments `names.votes` (the single vote column) through the atomic `upvote()` Postgres function. Each visitor gets one favorite per project, tracked in an httpOnly cookie.
 - **The homepage** renders the 12 top-voted names, each with the project it was named for and the model that suggested it.
 
-All database access happens on the server with the Supabase service role key. Row-level security allows public reads only, and only the service role can run `upvote()`.
+All database access happens on the server with the Supabase secret key. Row-level security allows public reads only, and only the service role can run `upvote()`.
 
 ## Setup
 
@@ -19,7 +19,7 @@ All database access happens on the server with the Supabase service role key. Ro
 
    | Variable | Where to get it |
    | --- | --- |
-   | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API |
+   | `SUPABASE_URL`, `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys (the `sb_secret_…` key; the legacy `service_role` key also works, and `SUPABASE_SERVICE_ROLE_KEY` is accepted as the name) |
    | `ANTHROPIC_API_KEY` | console.anthropic.com |
    | `OPENAI_API_KEY` | platform.openai.com |
    | `GEMINI_API_KEY` | aistudio.google.com |
@@ -50,7 +50,7 @@ Connect the repo to the Worker, then use these settings under **Settings → Bui
 
 Leave the build command as `npx opennextjs-cloudflare build`, not `npm run build`. Plain `next build` doesn't produce the files the deploy step needs.
 
-Add the app keys under the Worker's **Settings → Variables and Secrets**, each with type **Secret**: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` and `GEMINI_API_KEY`. Every push to the production branch then deploys automatically.
+Add the app keys under the Worker's **Settings → Variables and Secrets**, each with type **Secret**: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` and `GEMINI_API_KEY`. Every push to the production branch then deploys automatically.
 
 ### With GitHub Actions
 
@@ -59,7 +59,7 @@ Use this instead of Workers Builds, not alongside it.
 1. In GitHub, go to **Settings → Secrets and variables → Actions** and add these repository secrets:
    - `CLOUDFLARE_API_TOKEN`: a token made from the "Edit Cloudflare Workers" template
    - `CLOUDFLARE_ACCOUNT_ID`: shown on your account's Workers & Pages overview
-   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`
+   - `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`
 2. Deploy: go to **Actions → Deploy to Cloudflare → Run workflow**. The workflow also runs on every push to `main`. It builds the app, deploys it, and copies the five app keys into the Worker as secrets.
 
 ### After deploying

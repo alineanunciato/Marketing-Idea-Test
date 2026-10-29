@@ -20,13 +20,14 @@ export type TopName = NameRow & { projects: Pick<ProjectRow, "description"> | nu
 
 let client: SupabaseClient | undefined;
 
-// Server-only client using the service role key; never import this from a client component.
+// Server-only client using the secret (service role) key; never import this from a client component.
 export function supabase(): SupabaseClient {
   if (!client) {
     const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // SUPABASE_SECRET_KEY is Supabase's current name; SUPABASE_SERVICE_ROLE_KEY is the legacy one.
+    const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) {
-      throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set");
+      throw new Error("SUPABASE_URL and SUPABASE_SECRET_KEY must be set");
     }
     client = createClient(url, key, { auth: { persistSession: false } });
   }

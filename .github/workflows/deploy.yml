@@ -35,11 +35,11 @@ jobs:
       - name: Sync Worker secrets
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          jq -n 'env | {SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY}
+          jq -n 'env | {SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY}
             | with_entries(select(.value != null and .value != ""))' \
             | npx wrangler secret bulk

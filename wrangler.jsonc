@@ -9,5 +9,7 @@
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
 	},
+	// Keep variables added in the Cloudflare dashboard instead of deleting them on each deploy.
+	"keep_vars": true,
 	"observability": { "enabled": true }
 }
